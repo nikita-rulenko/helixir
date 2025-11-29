@@ -1,0 +1,92 @@
+[package]
+name = "helixir"
+version = "0.1.0"
+edition = "2024"
+authors = ["Nikita Rulenko (x.com/dengoslav)"]
+description = "Ontological memory for LLMs - Rust implementation"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/nickorulenko/helixir"
+keywords = ["ai", "memory", "llm", "graph", "mcp"]
+categories = ["science", "database"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.41", features = ["full"] }
+async-trait = "0.1"
+
+# HelixDB official SDK
+helix-rs = "0.1"
+
+# HTTP client (for embeddings, LLM providers)
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "blocking"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Async utilities
+futures = "0.3"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1.11", features = ["v4", "serde"] }
+
+# Enum utilities
+strum = { version = "0.26", features = ["derive"] }
+
+# MCP Server (Model Context Protocol)
+rmcp = { version = "0.8", features = ["macros", "server", "transport-io"] }
+
+# Config
+config = "0.14"
+
+# Caching
+lru = "0.12"
+
+# Lazy static initialization
+lazy_static = "1.5"
+
+# URL parsing
+url = "2.5"
+
+# Hashing (for cache keys)
+sha2 = "0.10"
+
+# Regex (for query processing, BM25)
+regex = "1.11"
+parking_lot = "0.12.5"
+
+# Text chunking (semantic splitting for RAG)
+text-splitter = "0.28"
+
+# JSON Schema (for MCP tool parameters)
+schemars = "1.0"
+
+# MCP (Model Context Protocol)
+# TODO: Add mcp-rust-sdk when available or implement manually
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[lib]
+name = "helixir"
+path = "src/lib.rs"
+
+[[bin]]
+name = "helixir-mcp"
+path = "src/bin/helixir_mcp.rs"
+
+[[bin]]
+name = "helixir-deploy"
+path = "src/bin/helixir_deploy.rs"
+

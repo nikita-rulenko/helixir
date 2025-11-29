@@ -1,0 +1,73 @@
+# .gitignore для проекта HelixDB
+
+# Ansible
+ansible/*.retry
+ansible/.tmp/
+ansible/vault/.vault_pass
+ansible/molecule/.molecule/
+ansible/__pycache__/
+
+# k6 results
+k6/results/*.json
+k6/results/*.html
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+*.out
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Secrets (important!)
+*.pem
+*.key
+*.crt
+*_rsa
+*_rsa.pub
+secrets/
+credentials/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Deployment reports (failures)
+fucked/
+
+# Version history
+.version_history/
+schema/.history/
+helixir/schema/.history/
+
+# Schema generated (optional - for review before commit)
+# helixir/schema/_generated/*.hx
+
+# Tests (local development only)
+tests/
+

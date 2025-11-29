@@ -64,7 +64,7 @@ Same features, 10x faster, zero dependencies.
 - **🕸️ Graph Memory** — Entities, relations, and reasoning chains
 - **🔍 Semantic Search** — Vector similarity + graph traversal (SmartTraversalV2)
 - **⏰ Temporal Filtering** — recent (4h), contextual (30d), deep (90d), full
-- **🏷️ Ontology Mapping** — skill, preference, goal, fact, opinion, experience
+- **🏷️ Ontology Mapping** — skill, preference, goal, fact, opinion, experience, achievement
 - **📡 MCP Server** — Native integration with AI assistants
 - **🧩 Semantic Chunking** — Automatic splitting of long texts
 
@@ -207,7 +207,7 @@ To make your AI assistant actually USE the memory, add these rules to **Cursor S
 |------|-------------|
 | `add_memory` | Add memory with LLM extraction → `{memories_added, entities, relations, chunks_created}` |
 | `search_memory` | Smart search: `recent` (4h), `contextual` (30d), `deep` (90d), `full` |
-| `search_by_concept` | Filter by type: `skill`, `goal`, `preference`, `fact`, `opinion` |
+| `search_by_concept` | Filter by type: `skill`, `goal`, `preference`, `fact`, `opinion`, `experience`, `achievement` |
 | `search_reasoning_chain` | Find logical connections: `IMPLIES`, `BECAUSE`, `CONTRADICTS` |
 | `get_memory_graph` | Visualize memory as nodes and edges |
 | `update_memory` | Update existing memory content |

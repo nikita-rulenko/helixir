@@ -1,0 +1,87 @@
+# ============================================================================
+# Helixir-RS Docker Compose
+# 
+# Full stack: HelixDB + Helixir MCP Server
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # HelixDB - Graph database for memory storage
+  helixdb:
+    image: helixdb/helixdb:latest
+    container_name: helixdb
+    ports:
+      - "6969:6969"
+    volumes:
+      - helixdb_data:/data
+      - ./schema:/schema:ro
+    environment:
+      - HELIX_LOG_LEVEL=info
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6969/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Schema deployment (runs once)
+  schema-deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helixir-schema-deploy
+    entrypoint: ["helixir-deploy"]
+    command: ["--host", "helixdb", "--port", "6969"]
+    depends_on:
+      helixdb:
+        condition: service_healthy
+    restart: "no"
+
+  # Helixir MCP Server
+  # Note: MCP uses stdio, so this is for testing/development
+  # In production, run helixir-mcp directly on the host
+  helixir-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helixir-mcp
+    environment:
+      - HELIX_HOST=helixdb
+      - HELIX_PORT=6969
+      - LLM_PROVIDER=${LLM_PROVIDER:-cerebras}
+      - LLM_MODEL=${LLM_MODEL:-llama-3.3-70b}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-openai}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-sentence-transformers/all-mpnet-base-v2}
+      - EMBEDDING_URL=${EMBEDDING_URL:-https://openrouter.ai/api/v1}
+      - EMBEDDING_API_KEY=${EMBEDDING_API_KEY}
+      - RUST_LOG=helixir=warn,helixir::mcp=info
+    depends_on:
+      helixdb:
+        condition: service_healthy
+      schema-deploy:
+        condition: service_completed_successfully
+    # stdin_open: true  # For MCP stdio
+    # tty: true
+    restart: unless-stopped
+
+volumes:
+  helixdb_data:
+    driver: local
+
+# ============================================================================
+# Usage:
+#
+# 1. Create .env file with API keys:
+#    LLM_API_KEY=your_cerebras_key
+#    EMBEDDING_API_KEY=your_openrouter_key
+#
+# 2. Start services:
+#    docker-compose up -d
+#
+# 3. For MCP in Cursor, run helixir-mcp directly on host:
+#    HELIX_HOST=localhost cargo run --release --bin helixir-mcp
+#
+# ============================================================================
+

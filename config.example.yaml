@@ -1,0 +1,126 @@
+# ============================================================
+# HelixDB Memory System - LLM Configuration
+# ============================================================
+#
+# This config defines TWO separate providers:
+# 1. LLM Provider - for text generation (extraction, reasoning, decisions)
+# 2. Embedding Provider - for vector embeddings (semantic search)
+#
+# WHY SEPARATE?
+# - Not all LLMs provide embeddings (e.g. Cerebras, many local models)
+# - Embeddings models are specialized and smaller
+# - You can use fast inference (Cerebras) + local embeddings (Ollama)
+#
+# ============================================================
+
+# === LLM Provider (Text Generation) ===
+# Used for: memory extraction, reasoning, decision making
+# NOTE: MCP server overrides this via ~/.cursor/mcp.json env vars!
+llm_provider: "cerebras"  # Options: "cerebras", "openai", "ollama"
+llm_model: "llama3.3-70b"
+llm_temperature: 0.3
+llm_api_key: null  # REQUIRED for Cerebras! Set via HELIX_LLM_API_KEY env var
+
+# Provider-specific settings
+llm_base_url: null  # For Ollama: "http://192.168.50.2:11434"
+
+# === Embedding Provider ===
+# Used for: vector search, similarity matching
+embedding_provider: "ollama"  # Options: "ollama", "openai", "huggingface"
+embedding_model: "nomic-embed-text"  # See recommendations below
+embedding_url: "http://localhost:11434"  # For Ollama
+embedding_api_key: null  # For OpenAI: set via HELIX_EMBEDDING_API_KEY
+
+# === HelixDB Connection ===
+host: "localhost"
+port: 6969
+instance: "default"
+timeout: 30
+
+# ============================================================
+# RECOMMENDED CONFIGURATIONS
+# ============================================================
+
+# --- PRODUCTION: Fast Inference + Local Embeddings ---
+# llm_provider: "cerebras"
+# llm_model: "llama3.3-70b"  # Ultra-fast, 70B params, excellent reasoning
+# llm_api_key: "your-cerebras-api-key"
+#
+# embedding_provider: "ollama"
+# embedding_model: "nomic-embed-text"  # 137M params, 768d, long context (8K)
+# embedding_url: "http://localhost:11434"
+
+# --- DEVELOPMENT: All Local (Ollama) ---
+# llm_provider: "ollama"
+# llm_model: "gemma2"  # 9.2B params, good for extraction
+# llm_base_url: "http://localhost:11434"
+#
+# embedding_provider: "ollama"
+# embedding_model: "nomic-embed-text"
+# embedding_url: "http://localhost:11434"
+
+# --- CLOUD: OpenAI for Both ---
+# llm_provider: "openai"
+# llm_model: "gpt-4o"  # Best reasoning, expensive
+# llm_api_key: "your-openai-api-key"
+#
+# embedding_provider: "openai"
+# embedding_model: "text-embedding-3-large"  # 3072d, excellent quality
+# embedding_api_key: "your-openai-api-key"
+
+# ============================================================
+# MODEL RECOMMENDATIONS (by use case)
+# ============================================================
+
+# === LLM Models (Text Generation) ===
+#
+# BEST for Memory Extraction & Reasoning:
+# - cerebras/llama3.3-70b        ⚡ Ultra-fast, 70x faster than GPUs, excellent reasoning
+# - openai/gpt-4o                🎯 Best quality, structured output, expensive
+# - openai/gpt-4o-mini           💰 Good balance quality/cost
+# - ollama/gemma2:latest         🏠 Local, 9.2B params, great for extraction
+# - ollama/llama3:70b            🏠 Local, 70B params, needs beefy GPU
+#
+# FAST for Development:
+# - cerebras/llama3.1-8b         ⚡ Very fast, good for prototyping
+# - ollama/qwen2.5:7b            🏠 Local, fast, multilingual
+#
+# === Embedding Models ===
+#
+# BEST Overall:
+# - ollama/nomic-embed-text      🥇 768d, 137M, long context (8K), open source
+# - BGE-M3                       🥈 1024d, 567M, multilingual, state-of-the-art
+# - openai/text-embedding-3-large 🥉 3072d, excellent but closed source, expensive
+#
+# GOOD Balance:
+# - ollama/mxbai-embed-large     💪 1024d, 334M params, good quality
+# - openai/text-embedding-3-small 💰 Cheaper than large, still good
+#
+# FAST & Small:
+# - ollama/all-minilm            ⚡ 384d, 33M params, very fast, lower quality
+#
+# === Performance Metrics (from MTEB benchmarks) ===
+# Model                       | Params | Dims | MTEB Score | Context | Speed
+# ---------------------------|--------|------|------------|---------|-------
+# BGE-M3                     | 567M   | 1024 | 72.0%      | 8K      | Medium
+# nomic-embed-text-v1.5      | 137M   | 768  | 62.4%      | 8K      | Fast
+# text-embedding-3-large     | ?      | 3072 | 64.6%      | 8K      | API
+# text-embedding-3-small     | ?      | 1536 | 62.3%      | 8K      | API
+# mxbai-embed-large          | 334M   | 1024 | 59.3%      | 512     | Medium
+
+# ============================================================
+# NOTES
+# ============================================================
+#
+# 1. Cerebras API Key: Get free credits at https://cloud.cerebras.ai
+# 2. Ollama Setup: Pull models with `ollama pull nomic-embed-text`
+# 3. Context Length: nomic-embed-text supports up to 8K tokens
+# 4. Multilingual: Use BGE-M3 if you need 100+ languages
+# 5. Cost: Cerebras inference is ~10x cheaper than OpenAI GPT-4
+#
+# === Environment Variables (override config) ===
+# export HELIX_LLM_PROVIDER="cerebras"
+# export HELIX_LLM_API_KEY="your-api-key"
+# export HELIX_EMBEDDING_PROVIDER="ollama"
+# export HELIX_EMBEDDING_URL="http://localhost:11434"
+

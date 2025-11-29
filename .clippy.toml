@@ -1,0 +1,21 @@
+# Clippy configuration - STRICT MODE
+# Equivalent to ruff for Python
+
+# MSRV - minimum supported Rust version
+msrv = "1.80"
+
+# Cognitive complexity threshold
+cognitive-complexity-threshold = 15
+
+# Max lines per function
+too-many-lines-threshold = 100
+
+# Max function arguments
+too-many-arguments-threshold = 7
+
+# Disallow certain types in public API
+disallowed-types = []
+
+# Enforce documentation
+missing-docs-in-crate-items = true
+

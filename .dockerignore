@@ -1,0 +1,35 @@
+# Build artifacts
+target/
+*.rs.bk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Tests
+tests/
+
+# Documentation
+*.md
+docs/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Local config
+.env
+.env.*
+config.local.yaml
+

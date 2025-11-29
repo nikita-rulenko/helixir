@@ -185,6 +185,10 @@ impl HelixirClient {
         self.db.health_check().await
             .map_err(|e| HelixirClientError::Database(e.to_string()))?;
 
+        
+        self.tooling_manager.initialize().await
+            .map_err(|e| HelixirClientError::Tooling(e.to_string()))?;
+
         self.is_initialized.store(true, Ordering::Relaxed);
         Ok(())
     }

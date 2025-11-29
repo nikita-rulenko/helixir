@@ -7,13 +7,15 @@ use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 async fn main() -> anyhow::Result<()> {
     
     
+    let filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| {
+            EnvFilter::new("warn")
+                .add_directive("helixir::mcp=info".parse().unwrap())
+        });
+    
     tracing_subscriber::registry()
         .with(fmt::layer().with_writer(std::io::stderr))
-        .with(
-            EnvFilter::from_default_env()
-                .add_directive("helixir=warn".parse()?)
-                .add_directive("helixir::mcp=info".parse()?) 
-        )
+        .with(filter)
         .init();
 
     run_server().await

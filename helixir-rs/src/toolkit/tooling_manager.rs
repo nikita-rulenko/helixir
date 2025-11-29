@@ -163,6 +163,28 @@ impl ToolingManager {
         }
     }
 
+    pub async fn initialize(&self) -> Result<(), ToolingError> {
+        info!("Initializing ToolingManager - loading ontology");
+        
+        let needs_load = {
+            let ontology = self.ontology_manager.read();
+            !ontology.is_loaded()
+        };
+        
+        if needs_load {
+            let db = Arc::clone(&self.db);
+            let mut ontology_manager = OntologyManager::new(db);
+            ontology_manager.load().await.map_err(|e| {
+                warn!("Failed to load ontology: {}", e);
+                ToolingError::from(e)
+            })?;
+            
+            *self.ontology_manager.write() = ontology_manager;
+            info!("Ontology loaded successfully");
+        }
+        Ok(())
+    }
+
     
     pub async fn add_memory(
         &self,
@@ -1179,10 +1201,25 @@ impl ToolingManager {
                 
                 let matches_type = match concept_type {
                     Some(ct) => {
-                        concepts.instance_of.iter().any(|c| 
+                        let has_db_link = concepts.instance_of.iter().any(|c| 
                             c.name.to_lowercase() == ct.to_lowercase() ||
                             c.concept_id.to_lowercase().contains(&ct.to_lowercase())
-                        )
+                        );
+                        
+                        if has_db_link {
+                            true
+                        } else {
+                            let ontology = self.ontology_manager.read();
+                            if ontology.is_loaded() {
+                                let mapped = ontology.map_memory_to_concepts(&candidate.content, None);
+                                mapped.iter().any(|m| 
+                                    m.concept.name.to_lowercase() == ct.to_lowercase() ||
+                                    m.concept.id.to_lowercase() == ct.to_lowercase()
+                                )
+                            } else {
+                                false
+                            }
+                        }
                     }
                     None => true,
                 };

@@ -1,20 +1,19 @@
 <p align="center">
-  <img src="helixir-rs-logo.jpeg" alt="Helixir Logo" width="400"/>
+  <img src="helixir-logo.jpeg" alt="Helixir Logo" width="400"/>
 </p>
 
-<h1 align="center">🧠 Helixir-RS</h1>
+<h1 align="center">🧠 Helixir</h1>
 
 <p align="center">
   <strong>The Fastest Memory for LLM Agents</strong><br/>
-  <em>Rust implementation of the Helixir ontological memory framework</em>
+  <em>Ontological memory framework for AI assistants</em>
 </p>
 
 <p align="center">
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-features">Features</a> •
   <a href="#-mcp-integration">MCP Integration</a> •
-  <a href="#-configuration">Configuration</a> •
-  <a href="https://github.com/nikita-rulenko/helixir">Python Version</a>
+  <a href="#-configuration">Configuration</a>
 </p>
 
 <p align="center">
@@ -25,9 +24,9 @@
 
 ---
 
-## What is Helixir-RS?
+## What is Helixir?
 
-**Helixir-RS** is the high-performance Rust version of [Helixir](https://github.com/nikita-rulenko/helixir) — an associative & causal AI memory framework.
+**Helixir** is an associative & causal AI memory framework — the fastest way to give your AI agents persistent, structured, reasoning-capable memory.
 
 It gives your AI agents **persistent, structured, reasoning-capable memory**. Instead of losing context between sessions, your AI remembers facts, learns preferences, tracks goals, and builds knowledge over time.
 
@@ -43,17 +42,10 @@ This combination delivers **sub-second memory operations** with the 70B paramete
 
 ### 🦀 Why Rust?
 
-This is the **high-performance Rust implementation** of Helixir. Compared to the [Python version](https://github.com/nikita-rulenko/helixir):
-
-| | Rust | Python |
-|---|:---:|:---:|
-| **Startup time** | ~50ms | ~2s |
-| **Memory usage** | ~15MB | ~150MB |
-| **Binary size** | 15MB standalone | Requires Python runtime |
-| **Dependencies** | Zero runtime deps | pip/uv + packages |
-| **Deployment** | Single binary | Virtual env setup |
-
-Same features, 10x faster, zero dependencies.
+- ⚡ **~50ms startup** — instant response
+- 📦 **~15MB memory** — lightweight footprint
+- 🎯 **Single binary** — zero runtime dependencies
+- 🛡️ **Memory safe** — no crashes, no leaks
 
 ---
 
@@ -111,7 +103,7 @@ Your AI develops consistent habits: recalls context at session start, saves impo
 
 ```bash
 # Clone and start everything
-git clone https://github.com/nikita-rulenko/helixir-rs
+git clone https://github.com/nikita-rulenko/Helixir
 cd helixir-rs
 
 # Create config
@@ -133,13 +125,13 @@ docker-compose up -d
 ```bash
 # 1. Download binary for your platform
 # Linux x86_64
-curl -L https://github.com/nikita-rulenko/helixir-rs/releases/latest/download/helixir-linux-x86_64.tar.gz | tar xz
+curl -L https://github.com/nikita-rulenko/Helixir/releases/latest/download/helixir-linux-x86_64.tar.gz | tar xz
 
 # macOS Apple Silicon
-curl -L https://github.com/nikita-rulenko/helixir-rs/releases/latest/download/helixir-macos-arm64.tar.gz | tar xz
+curl -L https://github.com/nikita-rulenko/Helixir/releases/latest/download/helixir-macos-arm64.tar.gz | tar xz
 
 # macOS Intel
-curl -L https://github.com/nikita-rulenko/helixir-rs/releases/latest/download/helixir-macos-x86_64.tar.gz | tar xz
+curl -L https://github.com/nikita-rulenko/Helixir/releases/latest/download/helixir-macos-x86_64.tar.gz | tar xz
 
 # 2. Start HelixDB (if not running)
 docker run -d -p 6969:6969 helixdb/helixdb:latest
@@ -156,7 +148,7 @@ export EMBEDDING_API_KEY=your_key
 ### Build from Source
 
 ```bash
-git clone https://github.com/nikita-rulenko/helixir-rs
+git clone https://github.com/nikita-rulenko/Helixir
 cd helixir-rs
 
 # Build
@@ -541,7 +533,7 @@ cargo fmt --check
 ## 🔗 Links
 
 - [HelixDB](https://github.com/HelixDB/helix-db) — Graph-vector database
-- [Helixir (Python)](https://github.com/nikita-rulenko/helixir) — Python version
+- [Helixir-Py](https://github.com/nikita-rulenko/helixir-py) — Python prototype (deprecated)
 - [MCP Specification](https://spec.modelcontextprotocol.io/) — Model Context Protocol
 - [Cerebras](https://cloud.cerebras.ai) — Fast LLM inference (free tier)
 - [OpenRouter](https://openrouter.ai) — Unified LLM/embedding API
